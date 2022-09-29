@@ -6,12 +6,17 @@ import Table from './Components/Table'
 import {Select, MenuItem, FormControl,Card,CardContent} from '@material-ui/core'
 import { sortData } from './Components/util';
 import LineGraph from './Components/LineGraph';
+import {useMap as LeafletMap, tileLayer} from "react-leaflet"
+import "leaflet/dist/leaflet.css"
 function App() {
   const [countries, setcountries] = useState([])
   const [country,setCountry]   = useState('WorldWide');
   const[countryInfo,setCountryInfo]= useState({})
   const [tableData,setTableData] = useState([])
+  const [mapCenter, setmapCenter] = useState({lat: 34.88746, lng:-40.4796})
+  const [mapZoom, setmapZoom] = useState(3)
 
+  
   useEffect(()=>{
     fetch("https://disease.sh/v3/covid-19/all")
     .then(response=>response.json())
@@ -80,7 +85,10 @@ function App() {
 
     </div>
     <div>
-      <Maps/>
+      <Maps 
+        center={mapCenter}
+        zoom={mapZoom}
+      />
     </div>
     
     </div>
@@ -92,7 +100,7 @@ function App() {
                
                 <Table countries={tableData}/>
                 <h3>Worldwide new cases</h3>
-            <LineGraph casesType={casesType} />
+           
             </CardContent>
         </Card>
         
