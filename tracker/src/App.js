@@ -15,7 +15,7 @@ function App() {
   const [tableData,setTableData] = useState([])
   const [mapCenter, setmapCenter] = useState({lat: 34.88746, lng:-40.4796})
   const [mapZoom, setmapZoom] = useState(3)
-
+  const [mapCountries, setmapCountries] = useState([])
   
   useEffect(()=>{
     fetch("https://disease.sh/v3/covid-19/all")
@@ -39,6 +39,7 @@ function App() {
         ));
         const sortedData = sortData(data)
         setcountries(countries);
+        setmapCountries(data)
         setTableData(sortedData)
       });
     };
@@ -58,8 +59,12 @@ function App() {
         
         setCountry(countryCode);
         setCountryInfo(data);
+        setmapCenter([data.countryInfo.lat, data.countryInfo.long]);
+        setmapZoom(4);
        
       })
+
+
 
 }; 
 
@@ -82,12 +87,15 @@ function App() {
      <InfoBox title="CoronaVirus Cases" total={countryInfo.cases} cases={countryInfo.todayCases}/>
      <InfoBox title="Recovered" total={countryInfo.recovered} cases={countryInfo.todayRecovered}/>
      <InfoBox title="Deaths" total={countryInfo.deaths} cases={countryInfo.todayDeaths}/>
+     
+     <InfoBox title="Vaccinated" total ={countryInfo.vaccinated}/>
 
     </div>
     <div>
       <Maps 
         center={mapCenter}
         zoom={mapZoom}
+        countries={mapCountries}
       />
     </div>
     
@@ -99,7 +107,7 @@ function App() {
                 <h3>Live Cases by countries</h3>
                
                 <Table countries={tableData}/>
-                <h3>Worldwide new cases</h3>
+               
            
             </CardContent>
         </Card>
